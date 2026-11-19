@@ -696,3 +696,7 @@ body.messenger-open { overflow: hidden; }
 @media (prefers-reduced-motion: reduce) {
   nav button, .messenger-trigger { transition: none; }
 }
+.messenger-dialog::backdrop {
+  background: rgb(3 5 7 / 45%);
+  backdrop-filter: none;
+}
