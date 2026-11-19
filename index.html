@@ -7,108 +7,88 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
   <header id="home">
     <p class="eyebrow">Jakerooni · A hunter's journal</p>
     <h1>My Profile</h1>
     <p class="intro">Every hunter has a story. This is mine.</p>
-
     <nav aria-label="Main navigation">
       <a href="#home" aria-current="page">Home</a>
       <a href="#profile">Profile</a>
       <a href="gallery.html">Gallery</a>
-      <a href="#contacts">Contacts</a>
+      <button type="button" data-open-contact>Contacts</button>
     </nav>
   </header>
 
-  <main id="profile">
-    <h2 class="section-title">✦ The Hunter's Journal ✦</h2>
+  <main>
+    <section class="journal-section welcome" aria-labelledby="welcome-title">
+      <p class="collection-label">01 / WELCOME, GOOD HUNTER</p>
+      <h2 id="welcome-title">A creator in the making.</h2>
+      <p>I'm Jake, a BSEMC student exploring animation, visual storytelling, and game development.</p>
+      <p>From a moonlit village to a moving character, I enjoy bringing ideas to life and learning something new with every project.</p>
+      <a class="collection-button" href="gallery.html">Explore my works →</a>
+    </section>
 
-    <!-- Exactly three content divs inside this container. -->
-    <div class="container">
-
-      <div class="card personal"
-           tabindex="0"
-           aria-labelledby="personal-title">
-
-        <img class="rune"
-             src="images/hunter-mark.png"
-             alt=""
-             aria-hidden="true">
-
-        <p class="number">01 / THE HUNTER</p>
-        <h3 id="personal-title">Personal Information</h3>
-
-        <p><strong>Name:</strong> Jake Benedick B. Murillo</p>
-        <p><strong>Course:</strong> BSEMC</p>
-        <p class="hint">Hover or use Tab to uncover more.</p>
-
-        <section class="extra" aria-label="More about me">
-          <article>
-            <h4>Behind the hunter</h4>
-            <p>
-              I am a curious student who enjoys learning new skills,
-              being creative, and turning ideas into something meaningful.
-            </p>
-            <p>
-              Like a hunter exploring Yharnam, I approach challenges
-              with patience and determination.
-            </p>
-          </article>
+    <section class="journal-section" aria-labelledby="featured-title">
+      <p class="collection-label">02 / FEATURED PROJECT</p>
+      <article class="featured-project">
+        <a href="gallery.html#animation" aria-label="Explore The First Instruments">
+          <img src="images/Screenshot 3.png" alt="A still frame from The First Instruments animatic" decoding="async">
+        </a>
+        <section>
+          <h2 id="featured-title">The First Instruments</h2>
+          <p>A collaborative animation project combining visual storytelling, scene creation, and editing.</p>
+          <p><strong>My contributions:</strong> I edited half of the scenes in Alight Motion.</p>
+          <a class="collection-button" href="gallery.html#animation">View the project →</a>
         </section>
-      </div>
+      </article>
+    </section>
 
-      <div class="card hobbies"
-           tabindex="0"
-           aria-labelledby="hobbies-title">
+    <aside class="currently-note">
+      <p class="collection-label">CURRENTLY EXPLORING</p>
+      <h2>Movement, mood, and interactive worlds.</h2>
+      <p>I'm practicing animation and drawing while exploring the skills I need to become a game developer.</p>
+    </aside>
 
-        <img class="rune"
-             src="images/eye-rune.png"
-             alt=""
-             aria-hidden="true">
-
-        <p class="number">02 / PASTIMES</p>
-        <h3 id="hobbies-title">My Hobbies</h3>
-
-        <p>Gaming, music, and creative projects.</p>
-        <p class="hint">Hover or use Tab to uncover more.</p>
-
-        <section class="extra" aria-label="More about my hobbies">
-          <article>
+    <section id="profile" class="journal-section" aria-labelledby="profile-title">
+      <h2 id="profile-title" class="section-title">✦ The Hunter's Journal ✦</h2>
+      <!-- Exactly three content divs inside this container. -->
+      <div class="container">
+        <div class="card personal" tabindex="0" aria-labelledby="personal-title">
+          <img class="rune" src="images/hunter-mark.png" alt="" aria-hidden="true">
+          <p class="number">01 / THE HUNTER</p>
+          <h3 id="personal-title">Personal Information</h3>
+          <p><strong>Name:</strong> Jake Benedick B. Murillo</p>
+          <p><strong>Course:</strong> BSEMC</p>
+          <p class="hint">Hover or use Tab to uncover more.</p>
+          <section class="extra" aria-label="More about me"><article>
+            <h4>Behind the hunter</h4>
+            <p>I am a curious student who enjoys learning new skills, being creative, and turning ideas into something meaningful.</p>
+            <p>Like a hunter exploring Yharnam, I approach challenges with patience and determination.</p>
+          </article></section>
+        </div>
+        <div class="card hobbies" tabindex="0" aria-labelledby="hobbies-title">
+          <img class="rune" src="images/eye-rune.png" alt="" aria-hidden="true">
+          <p class="number">02 / PASTIMES</p>
+          <h3 id="hobbies-title">My Hobbies</h3>
+          <p>Gaming, music, and creative projects.</p>
+          <p class="hint">Hover or use Tab to uncover more.</p>
+          <section class="extra" aria-label="More about my hobbies"><article>
             <h4>Beyond the hunt</h4>
             <ul>
-              <li>
-                Exploring the world and lore of Bloodborne
-                and other FromSoftware games
-              </li>
+              <li>Exploring the world and lore of Bloodborne and other FromSoftware games</li>
               <li>Listening to all kinds of music</li>
               <li>Practicing drawing characters and gothic scenery</li>
               <li>Learning all kinds of new skills</li>
             </ul>
-          </article>
-        </section>
-      </div>
-
-      <div class="card goals"
-           tabindex="0"
-           aria-labelledby="goals-title">
-
-        <img class="rune"
-             src="images/moon-rune.png"
-             alt=""
-             aria-hidden="true">
-
-        <p class="number">03 / THE PATH AHEAD</p>
-        <h3 id="goals-title">Career Goals</h3>
-
-        <p>
-          I want to become a game developer and create immersive
-          worlds and memorable experiences. While protecting the city.
-        </p>
-        <p class="hint">Hover or use Tab to uncover more.</p>
-
-        <section class="extra" aria-label="More about my career goals">
-          <article>
+          </article></section>
+        </div>
+        <div class="card goals" tabindex="0" aria-labelledby="goals-title">
+          <img class="rune" src="images/moon-rune.png" alt="" aria-hidden="true">
+          <p class="number">03 / THE PATH AHEAD</p>
+          <h3 id="goals-title">Career Goals</h3>
+          <p>I want to become a game developer and create immersive worlds and memorable experiences. While protecting the city.</p>
+          <p class="hint">Hover or use Tab to uncover more.</p>
+          <section class="extra" aria-label="More about my career goals"><article>
             <h4>My next steps</h4>
             <ul>
               <li>Learn game programming and strengthen my coding skills</li>
@@ -116,36 +96,38 @@
               <li>Explore game engines like Unity or Godot</li>
               <li>Create games with engaging stories and gameplay</li>
             </ul>
-          </article>
-        </section>
+          </article></section>
+        </div>
       </div>
+    </section>
 
-    </div>
+    <section class="journal-section" aria-labelledby="toolkit-title">
+      <p class="collection-label">03 / THE HUNTER'S TOOLKIT</p>
+      <h2 id="toolkit-title">Tools behind the work</h2>
+      <dl class="toolkit">
+        <dt>IbisPaint</dt><dd>Scene creation, drawing, and visual ideas.</dd>
+        <dt>Alight Motion</dt><dd>Editing and assembling animated scenes.</dd>
+        <dt>HTML &amp; CSS</dt><dd>Learning to build and style this portfolio.</dd>
+        <dt>Git &amp; Netlify</dt><dd>Saving versions of my website and publishing updates.</dd>
+      </dl>
+    </section>
+
+    <section class="journal-section" aria-labelledby="journey-title">
+      <p class="collection-label">04 / THE JOURNEY SO FAR</p>
+      <h2 id="journey-title">Small steps. New discoveries.</h2>
+      <ul class="journey-list">
+        <li><h3>Animation studies</h3><p>Experimenting with effects, flight, and movement through GIF exercises.</p></li>
+        <li><h3>The First Instruments</h3><p>Contributing scene artwork and editing to a group animation.</p></li>
+        <li><h3>A home for my work</h3><p>Building this Bloodborne-inspired portfolio and publishing it with Netlify.</p></li>
+      </ul>
+    </section>
   </main>
-
   <footer id="contacts">
-    <h2>Send a messenger</h2>
-
-    <p>
-      Email:
-      <a href="mailto:jakebenedickm@gmail.com">
-        jakebenedickm@gmail.com
-      </a>
-    </p>
-
-    <p>
-      GCash: 09452166177 · JAKE BENEDICK B. MURILLO
-    </p>
-
-    <p class="note">
-      May you find your worth in the waking world.
-      · Bloodborne-inspired student profile
-    </p>
-
+    <button class="messenger-trigger" type="button" data-open-contact>Send a Messenger</button>
+    <p class="note">May you find your worth in the waking world.</p>
     <p class="note">Is it obvious I like Bloodborne :)</p>
   </footer>
-
-  <!-- Closed eyes on the profile page. -->
   <script src="eyes.js" defer></script>
+  <script src="site.js" defer></script>
 </body>
 </html>

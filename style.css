@@ -603,4 +603,96 @@ footer a {
   .collection-piece {
     transition: none;
   }
+}/* HOME SECTIONS AND CONTACT POPUP */
+html { scrollbar-gutter: stable; }
+nav button, .messenger-trigger {
+  padding: 8px 24px;
+  border: 1px solid #756248;
+  background: transparent;
+  color: #dfcfaf;
+  font: inherit;
+  font-size: 13px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background-color 180ms, border-color 180ms;
+}
+nav button:hover, .messenger-trigger:hover {
+  border-color: #b2986f;
+  background: #59292c;
+}
+button:focus-visible, summary:focus-visible {
+  outline: 2px solid #dbc394;
+  outline-offset: 5px;
+}
+button.collection-button { font: inherit; cursor: pointer; }
+.journal-section { margin-bottom: 64px; }
+#profile { scroll-margin-top: 24px; }
+.journal-section h2, .currently-note h2 {
+  margin-top: 0;
+  color: #f0e4cd;
+  font-size: clamp(26px, 4vw, 36px);
+  font-weight: normal;
+  line-height: 1.35;
+}
+.journal-section .section-title { font-size: 20px; }
+.welcome { max-width: 740px; margin: 12px auto 64px; text-align: center; }
+.featured-project {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  border: 1px solid #756248;
+  background: #1a2026;
+}
+.featured-project > a { display: grid; align-items: center; background: #0b0d10; }
+.featured-project img { display: block; width: 100%; height: auto; }
+.featured-project > section { padding: 28px; }
+.currently-note {
+  margin: 0 0 64px;
+  padding: 24px 28px;
+  border-left: 3px solid #a18a65;
+  background: #25251f;
+}
+.currently-note h2 { font-size: 26px; }
+.currently-note p:last-child { margin-bottom: 0; }
+.toolkit { display: grid; grid-template-columns: minmax(130px, 1fr) 3fr; margin: 0; }
+.toolkit dt, .toolkit dd { margin: 0; padding: 18px 12px; border-bottom: 1px solid #75624866; }
+.toolkit dt { color: #dfc495; }
+.journey-list { margin: 0; padding: 0 0 0 24px; border-left: 1px solid #756248; list-style: none; }
+.journey-list li { position: relative; margin: 0 0 24px; }
+.journey-list li::before { content: '✦'; position: absolute; left: -31px; color: #c5aa7d; }
+.journey-list h3 { margin-bottom: 6px; color: #dfc495; font-weight: normal; }
+.journey-list p { margin-top: 0; }
+body.messenger-open { overflow: hidden; }
+.messenger-dialog {
+  position: fixed;
+  width: min(560px, calc(100% - 32px));
+  max-height: calc(100dvh - 48px);
+  margin: auto;
+  padding: 44px 30px 28px;
+  overflow: auto;
+  border: 1px solid #a18a65;
+  border-top: 3px solid #c5aa7d;
+  background: radial-gradient(ellipse at top, #30313a, #15181c 75%);
+  color: #d9d3c7;
+  box-shadow: 0 24px 90px #000b;
+}
+.messenger-dialog::backdrop { background: #030507cc; backdrop-filter: blur(5px); }
+.messenger-dialog h2 { margin: 0 0 16px; color: #f0e4cd; font-size: 32px; font-weight: normal; line-height: 1.3; }
+.messenger-close { position: absolute; top: 8px; right: 12px; width: 38px; height: 38px; border: 0; background: transparent; color: #dfc495; font-size: 28px; cursor: pointer; }
+.messenger-email { overflow-wrap: anywhere; }
+.messenger-email a { color: #dfc495; user-select: all; }
+.messenger-actions { display: flex; flex-wrap: wrap; gap: 12px; }
+.messenger-actions .collection-button { margin-top: 0; }
+.copy-status { min-height: 1.8em; font-size: 13px; color: #d1c09a; }
+.messenger-support { margin-top: 20px; padding-top: 16px; border-top: 1px solid #756248; font-size: 13px; }
+.messenger-support summary { color: #bfb19a; cursor: pointer; }
+@media (max-width: 700px) {
+  .featured-project { grid-template-columns: 1fr; }
+  .toolkit { grid-template-columns: 1fr; }
+  .toolkit dt { padding-bottom: 0; border-bottom: 0; }
+  .toolkit dd { padding-top: 4px; }
+  .messenger-dialog { padding: 44px 20px 24px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  nav button, .messenger-trigger { transition: none; }
 }

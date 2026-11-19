@@ -20,7 +20,7 @@
       <a href="index.html#home">Home</a>
       <a href="index.html#profile">Profile</a>
       <a href="gallery.html" aria-current="page">Gallery</a>
-      <a href="index.html#contacts">Contacts</a>
+      <button type="button" data-open-contact>Contacts</button>
     </nav>
   </header>
 
@@ -194,20 +194,14 @@
 
   </main>
 
-  <footer>
-    <h2>Send a messenger</h2>
-    <p>
-      Email:
-      <a href="mailto:jakebenedickm@gmail.com">
-        jakebenedickm@gmail.com
-      </a>
-    </p>
-    <p class="note">
-      May you find your worth in the waking world.
-    </p>
+  <footer id="contacts">
+    <button class="messenger-trigger" type="button" data-open-contact>Send a Messenger</button>
+    <p class="note">May you find your worth in the waking world.</p>
+    <p class="note">Is it obvious I like Bloodborne :)</p>
   </footer>
 
   <!-- Open, animated eyes on the gallery page. -->
   <script src="eyes.js" data-awake="true" defer></script>
+  <script src="site.js" defer></script>
 </body>
 </html>
