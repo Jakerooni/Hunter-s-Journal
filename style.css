@@ -1,0 +1,606 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  isolation: isolate;
+  background-color: #101214;
+  background-image:
+    radial-gradient(ellipse at top, #30363c, transparent 65%);
+  color: #d9d3c7;
+  font-family: Georgia, "Times New Roman", serif;
+  line-height: 1.8;
+}
+
+/* HEADER */
+
+header {
+  position: relative;
+  overflow: hidden;
+  padding: 52px 24px 32px;
+  border-bottom: 1px solid #756248;
+  background: linear-gradient(180deg, #090b10cc, #181c22aa);
+  text-align: center;
+}
+
+header::before {
+  content: "";
+  position: absolute;
+  top: -65px;
+  left: calc(50% - 90px);
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  background: #c4c6bb;
+  box-shadow: 0 0 70px #b9c4cb33;
+  opacity: 0.16;
+  pointer-events: none;
+}
+
+header > * {
+  position: relative;
+}
+
+.eyebrow {
+  margin: 0;
+  color: #c5aa7d;
+  font-size: 11px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+}
+
+h1 {
+  margin: 14px 0;
+  color: #ece5d6;
+  font-size: clamp(38px, 7vw, 72px);
+  font-weight: normal;
+  line-height: 1.2;
+  letter-spacing: 5px;
+  text-transform: uppercase;
+  text-shadow: 0 3px 18px #000;
+}
+
+.intro {
+  margin: 12px auto 30px;
+  color: #b9b6af;
+  font-style: italic;
+}
+
+/* NAVIGATION */
+
+nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+}
+
+nav a {
+  padding: 8px 24px;
+  border: 1px solid #756248;
+  color: #dfcfaf;
+  font-size: 13px;
+  letter-spacing: 2px;
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: background-color 180ms, border-color 180ms;
+}
+
+nav a:hover,
+nav a:focus-visible {
+  border-color: #b2986f;
+  background-color: #59292c;
+}
+
+nav a[aria-current="page"] {
+  border-color: #c5aa7d;
+  background-color: #352023;
+}
+
+a:focus-visible,
+.card:focus-visible {
+  outline: 2px solid #dbc394;
+  outline-offset: 5px;
+}
+
+/* SHARED LAYOUT */
+
+main {
+  width: 100%;
+  max-width: 1160px;
+  margin: auto;
+  padding: 44px 24px 52px;
+}
+
+.section-title {
+  margin: 0 0 28px;
+  color: #bdab8c;
+  font-size: 16px;
+  font-weight: normal;
+  letter-spacing: 3px;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+/* PROFILE CARDS */
+
+.container {
+  display: flex;
+  align-items: flex-start;
+  gap: 24px;
+}
+
+.card {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  flex: 1;
+  min-width: 0;
+  padding: 140px 26px 30px;
+  border: 1px solid #756248;
+  border-top: 3px solid #a18a65;
+  box-shadow: inset 0 0 35px #0004, 0 12px 24px #0004;
+  transition: border-color 250ms, box-shadow 250ms;
+}
+
+.card:hover,
+.card:focus-within {
+  border-color: #dbc394;
+  box-shadow: inset 0 0 35px #0004, 0 14px 30px #0008;
+}
+
+.card > :not(.rune) {
+  position: relative;
+  z-index: 1;
+}
+
+.card::after {
+  content: "✦";
+  position: relative;
+  z-index: 1;
+  display: block;
+  margin-top: 24px;
+  color: #b29971;
+  text-align: center;
+}
+
+.personal {
+  background-color: #352023;
+}
+
+.hobbies {
+  background-color: #202d38;
+}
+
+.goals {
+  background-color: #303226;
+}
+
+/* RUNES */
+
+.card .rune {
+  position: absolute;
+  z-index: 0;
+  top: 18px;
+  left: 50%;
+  width: 90px;
+  height: 104px;
+  object-fit: contain;
+  transform: translateX(-50%);
+  opacity: 0.85;
+  pointer-events: none;
+  mix-blend-mode: screen;
+  transition:
+    top 600ms ease,
+    width 600ms ease,
+    height 600ms ease,
+    opacity 600ms ease;
+}
+
+/* Preserves the filters from your supplied stylesheet. */
+.personal .rune,
+.goals .rune {
+  filter: invert(1) grayscale(1) contrast(3);
+}
+
+.card:hover .rune,
+.card:focus-within .rune {
+  top: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  opacity: 0.12;
+}
+
+.card .number {
+  margin: 0 0 20px;
+  color: #c9b185;
+  font-size: 10px;
+  letter-spacing: 2px;
+}
+
+.card h3 {
+  margin: 0 0 20px;
+  color: #f0e4cd;
+  font-size: 25px;
+  font-weight: normal;
+  line-height: 1.3;
+}
+
+.card p {
+  margin: 0 0 12px;
+}
+
+.card strong {
+  color: #e2cba2;
+}
+
+.card ul {
+  margin: 0;
+  padding-left: 19px;
+}
+
+.card li + li {
+  margin-top: 9px;
+}
+
+.card li::marker {
+  color: #bda171;
+}
+
+.hint {
+  color: #c9b185;
+  font-size: 12px;
+  font-style: italic;
+}
+
+/* EXPANDING DETAILS */
+
+.extra {
+  display: grid;
+  grid-template-rows: 0fr;
+  visibility: hidden;
+  transition: grid-template-rows 350ms ease, visibility 350ms;
+}
+
+.extra > article {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.extra h4 {
+  margin: 16px 0 10px;
+  color: #e2cba2;
+  font-weight: normal;
+}
+
+.card:hover .extra,
+.card:focus-within .extra {
+  grid-template-rows: 1fr;
+  visibility: visible;
+}
+
+/* FOOTER */
+
+footer {
+  max-width: 1112px;
+  margin: 0 auto;
+  padding: 26px 24px 34px;
+  border-top: 1px solid #62543f;
+  text-align: center;
+}
+
+footer h2 {
+  margin: 0 0 8px;
+  color: #d7c39e;
+  font-size: 22px;
+  font-weight: normal;
+}
+
+footer p {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+footer a {
+  color: #dfc495;
+  text-underline-offset: 4px;
+}
+
+.note {
+  margin-top: 20px;
+  color: #aaa497;
+  font-size: 12px;
+  font-style: italic;
+}
+
+/* GALLERY INTRODUCTION */
+
+.collection-opening {
+  max-width: 720px;
+  margin: 0 auto 64px;
+  padding: 28px 0 36px;
+  border-bottom: 1px solid #756248;
+  text-align: center;
+}
+
+.collection-label {
+  margin: 0 0 12px;
+  color: #c9b185;
+  font-size: 11px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+}
+
+.collection-opening h2,
+.collection-heading h2 {
+  margin: 0 0 16px;
+  color: #f0e4cd;
+  font-size: clamp(28px, 4vw, 40px);
+  font-weight: normal;
+  line-height: 1.3;
+}
+
+.collection-opening > p:not(.collection-label) {
+  color: #c1bbb0;
+}
+
+.collection-button {
+  display: inline-block;
+  margin-top: 16px;
+  padding: 10px 22px;
+  border: 1px solid #927a55;
+  background-color: #191c20;
+  color: #e2cba2;
+  text-decoration: none;
+  transition: background-color 250ms, border-color 250ms;
+}
+
+.collection-button:hover,
+.collection-button:focus-visible {
+  border-color: #dbc394;
+  background-color: #352023;
+}
+
+/* Remove the moon decoration from the gallery section header. */
+.collection .collection-heading {
+  padding: 0 0 24px;
+  border: 0;
+  background: none;
+  text-align: left;
+}
+
+.collection .collection-heading::before {
+  content: none;
+}
+
+.collection-heading > p:last-child {
+  max-width: 720px;
+  margin-bottom: 0;
+  color: #c1bbb0;
+}
+
+.collection-tip {
+  margin: 0 0 20px;
+  color: #b9ab94;
+  font-size: 13px;
+  font-style: italic;
+}
+
+/* FEATURED GROUP-ANIMATION SCENES */
+
+.collection-scenes {
+  display: grid;
+  gap: 32px;
+}
+
+.collection-piece {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid #756248;
+  border-top: 3px solid #a18a65;
+  background-color: #1a2026;
+  box-shadow: 0 12px 28px #0005;
+  transition: border-color 250ms, box-shadow 250ms;
+}
+
+.collection-piece:hover,
+.collection-piece:focus-within {
+  border-color: #d0b785;
+  box-shadow: 0 16px 34px #0008;
+}
+
+.collection-image-link {
+  display: block;
+  background-color: #0b0d10;
+}
+
+.collection-image-link:focus-visible {
+  outline-offset: -5px;
+}
+
+.collection-image {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 580px;
+  object-fit: contain;
+}
+
+.collection-caption {
+  padding: 24px 28px;
+  border-top: 1px solid #756248;
+  background:
+    linear-gradient(120deg, #35202377, transparent 70%);
+}
+
+.collection-caption h3 {
+  margin: 0 0 12px;
+  color: #f0e4cd;
+  font-size: 28px;
+  font-weight: normal;
+  line-height: 1.3;
+}
+
+.collection-caption > p:last-child {
+  margin-bottom: 0;
+}
+
+.collection-credit {
+  padding-top: 14px;
+  border-top: 1px solid #75624866;
+  color: #c6bfb2;
+  font-size: 14px;
+}
+
+.collection-credit strong {
+  color: #dfc495;
+}
+
+/* GIF STUDIES: UPSIDE-DOWN PYRAMID */
+
+.collection-subheading {
+  margin: 48px 0 24px;
+  color: #c9b185;
+  font-size: 17px;
+  font-weight: normal;
+  letter-spacing: 2px;
+  text-align: center;
+}
+
+.collection-details {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  align-items: start;
+  gap: 24px;
+}
+
+.collection-details > .collection-piece {
+  grid-column: span 2;
+}
+
+.collection-details > .collection-piece:last-child {
+  grid-column: 2 / 4;
+}
+
+.collection-details .collection-image {
+  aspect-ratio: 16 / 9;
+  max-height: none;
+  object-fit: contain;
+}
+
+.collection-details .collection-caption {
+  padding: 22px;
+}
+
+.collection-project-note {
+  margin-top: 32px;
+  padding: 20px 24px;
+  border-left: 3px solid #a18a65;
+  background-color: #25251f;
+}
+
+.collection-project-note h3 {
+  margin: 0 0 8px;
+  color: #dfc495;
+  font-size: 20px;
+  font-weight: normal;
+}
+
+.collection-project-note p {
+  margin: 0;
+}
+
+.collection-back {
+  margin: 36px 0 0;
+  text-align: center;
+}
+
+/* DECORATIVE EYE WALL */
+
+#eye-wall {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+/* RESPONSIVE LAYOUT */
+
+@media (max-width: 900px) {
+  #eye-wall {
+    display: none;
+  }
+}
+
+@media (max-width: 760px) {
+  .container {
+    flex-direction: column;
+  }
+
+  .card {
+    width: 100%;
+  }
+
+  h1 {
+    letter-spacing: 2px;
+  }
+}
+
+@media (max-width: 700px) {
+  .collection-details {
+    grid-template-columns: 1fr;
+  }
+
+  .collection-details > .collection-piece,
+  .collection-details > .collection-piece:last-child {
+    grid-column: 1 / -1;
+  }
+
+  .collection-opening {
+    margin-bottom: 40px;
+  }
+
+  .collection-caption {
+    padding: 20px;
+  }
+}
+
+/* Touch devices show profile details automatically. */
+@media (hover: none), (max-width: 760px) {
+  .card {
+    padding-top: 30px;
+  }
+
+  .extra {
+    grid-template-rows: 1fr;
+    visibility: visible;
+  }
+
+  .hint {
+    display: none;
+  }
+
+  .card .rune {
+    top: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    opacity: 0.12;
+  }
+}
+
+/* Respect reduced-motion preferences. */
+@media (prefers-reduced-motion: reduce) {
+  nav a,
+  .card,
+  .extra,
+  .card .rune,
+  .collection-button,
+  .collection-piece {
+    transition: none;
+  }
+}
