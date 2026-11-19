@@ -1,12 +1,12 @@
 (() => {
   const script = document.currentScript;
-  const awake = script?.dataset.awake === "true";
+  const gallery = script?.dataset.awake === "true";
 
-  /* SETTINGS YOU CAN CHANGE */
-  const preferredColumns = 3; // Maximum columns on EACH side.
-  const rowSpacing = 80;     // Increase for fewer eyes.
+  /* SETTINGS */
+  const preferredColumns = 3;
+  const rowSpacing = 80;
   const maximumWallWidth = 240;
-  const contentWidth = 1160; // Matches main's max-width in CSS.
+  const contentWidth = 1160;
   const contentGap = 20;
 
   const canvas = document.createElement("canvas");
@@ -29,23 +29,54 @@
   let height = 0;
   let eyes = [];
   let frame = 0;
-
-  const start = performance.now();
+  let lastTime = 0;
 
   const pointer = {
     x: window.innerWidth / 2,
     y: window.innerHeight / 2
   };
 
+  /*
+   * Remember the previous page so Home can start with
+   * open eyes when returning from Gallery.
+   */
+  const storageKey = "hunter-eye-page";
+
+  function readPreviousPage() {
+    try {
+      return sessionStorage.getItem(storageKey);
+    } catch {
+      return null;
+    }
+  }
+
+  function rememberPage() {
+    try {
+      sessionStorage.setItem(
+        storageKey,
+        gallery ? "gallery" : "home"
+      );
+    } catch {
+      /* The effect also works when storage is unavailable. */
+    }
+  }
+
+  const returningFromGallery =
+    !gallery && readPreviousPage() === "gallery";
+
+  rememberPage();
+
+  let opening = returningFromGallery ? 1 : 0;
+  let glare = 0;
+
+  function contactsOpen() {
+    return document.body.classList.contains("messenger-open");
+  }
+
   function clamp(value, min, max) {
     return Math.max(min, Math.min(max, value));
   }
 
-  function ease(value) {
-    return value * value * (3 - 2 * value);
-  }
-
-  /* Same seed gives the same positions on both pages. */
   function seededRandom(seed) {
     return function () {
       seed |= 0;
@@ -102,12 +133,6 @@
   }
 
   function addWall(startX, wallWidth, seed) {
-    const nextRandom = seededRandom(seed);
-
-    function between(min, max) {
-      return min + nextRandom() * (max - min);
-    }
-
     const columns = Math.min(
       preferredColumns,
       Math.max(1, Math.floor(wallWidth / 48))
@@ -118,45 +143,36 @@
 
     for (let column = 0; column < columns; column++) {
       for (let row = 0; row < rows; row++) {
-        /*
-         * Each eye gets its own seed.
-         * Existing eyes retain their appearance if row count changes.
-         */
-        const eyeRandom = seededRandom(
+        const random = seededRandom(
           seed + column * 10007 + row * 101
         );
 
-        function eyeBetween(min, max) {
-          return min + eyeRandom() * (max - min);
-        }
+        const between = (min, max) =>
+          min + random() * (max - min);
 
-        const eyeWidth =
-          cellWidth * eyeBetween(0.65, 0.88);
-
-        const eyeHeight =
-          eyeWidth * eyeBetween(0.4, 0.55);
+        const eyeWidth = cellWidth * between(0.65, 0.88);
+        const eyeHeight = eyeWidth * between(0.4, 0.55);
 
         eyes.push({
           x:
             startX +
             cellWidth * (column + 0.5) +
-            eyeBetween(-3, 3),
+            between(-3, 3),
 
           y:
             28 +
             row * rowSpacing +
             (column % 2) * 18 +
-            eyeBetween(-5, 5),
+            between(-5, 5),
 
           width: eyeWidth,
           height: eyeHeight,
-          angle: eyeBetween(-0.22, 0.22),
+          angle: between(-0.22, 0.22),
 
-          delay: eyeBetween(0, 900),
-          blinkOffset: eyeBetween(0, 9000),
-          blinkPeriod: eyeBetween(6500, 13000),
+          blinkOffset: between(0, 9000),
+          blinkPeriod: between(6500, 13000),
 
-          tone: Math.round(eyeBetween(110, 155)),
+          tone: Math.round(between(110, 155)),
           gazeX: 0,
           gazeY: 0
         });
@@ -164,15 +180,21 @@
     }
   }
 
-  function eyeOutline(halfWidth, halfHeight) {
+  function eyeOutline(halfWidth, halfHeight, intensity) {
+    /*
+     * Flatten the upper eyelid during the glare.
+     * No graphic assets are needed.
+     */
+    const upperCurve = 1.35 - intensity * 0.65;
+
     ctx.beginPath();
     ctx.moveTo(-halfWidth, 0);
 
     ctx.bezierCurveTo(
       -halfWidth * 0.45,
-      -halfHeight * 1.35,
+      -halfHeight * upperCurve,
       halfWidth * 0.45,
-      -halfHeight * 1.35,
+      -halfHeight * upperCurve,
       halfWidth,
       0
     );
@@ -189,44 +211,36 @@
     ctx.closePath();
   }
 
-  function drawEye(eye, now, followAmount) {
+  function drawEye(eye, now, followAmount, contact) {
     const halfWidth = eye.width / 2;
-    let opening = 0;
+    let eyeOpening = opening;
 
-    if (awake) {
-      if (reducedMotion.matches) {
-        opening = 1;
-      } else {
-        const progress = clamp(
-          (now - start - eye.delay) / 1200,
-          0,
-          1
-        );
+    /*
+     * No blinking while glaring.
+     * Gradually suppress blinking as the contact popup opens.
+     */
+    if (
+      gallery &&
+      !contact &&
+      !reducedMotion.matches &&
+      opening > 0.98
+    ) {
+      const cycle =
+        (now + eye.blinkOffset) % eye.blinkPeriod;
 
-        opening = ease(progress);
-
-        /* Blink only after the initial opening finishes. */
-        if (progress >= 1) {
-          const cycle =
-            (now - start + eye.blinkOffset) %
-            eye.blinkPeriod;
-
-          if (cycle < 240) {
-            const blink = Math.sin(
-              (cycle / 240) * Math.PI
-            );
-
-            opening *= 1 - blink * 0.96;
-          }
-        }
+      if (cycle < 240) {
+        const blink = Math.sin((cycle / 240) * Math.PI);
+        eyeOpening *= 1 - blink * 0.96 * (1 - glare);
       }
     }
 
     ctx.save();
     ctx.translate(eye.x, eye.y);
-    ctx.rotate(eye.angle);
 
-    /* Dark socket. */
+    /* The eyes straighten while looking toward the viewer. */
+    const angle = eye.angle * (1 - glare);
+    ctx.rotate(angle);
+
     const socket = ctx.createRadialGradient(
       0, 0, 1,
       0, 0, halfWidth * 1.2
@@ -250,8 +264,7 @@
 
     ctx.fill();
 
-    /* Closed eyelids on the profile page. */
-    if (opening < 0.025) {
+    if (eyeOpening < 0.025) {
       ctx.strokeStyle = "#727375";
       ctx.lineWidth = 1.5;
 
@@ -269,7 +282,6 @@
 
       ctx.strokeStyle = "#343638";
       ctx.lineWidth = 1;
-
       ctx.beginPath();
       ctx.moveTo(-halfWidth * 0.82, -7);
 
@@ -285,10 +297,9 @@
       return;
     }
 
-    const halfHeight =
-      eye.height * 0.5 * opening;
+    const halfHeight = eye.height * 0.5 * eyeOpening;
 
-    eyeOutline(halfWidth, halfHeight);
+    eyeOutline(halfWidth, halfHeight, glare);
 
     const white = ctx.createLinearGradient(
       0, -halfHeight,
@@ -311,21 +322,21 @@
     let targetX = 0;
     let targetY = 0;
 
-    if (!reducedMotion.matches) {
+    /*
+     * When Contacts is open, targets remain zero:
+     * every iris faces directly forward.
+     */
+    if (gallery && !contact && !reducedMotion.matches) {
       const dx = pointer.x - eye.x;
       const dy = pointer.y - eye.y;
 
       const localX =
-        dx * Math.cos(eye.angle) +
-        dy * Math.sin(eye.angle);
+        dx * Math.cos(angle) + dy * Math.sin(angle);
 
       const localY =
-        -dx * Math.sin(eye.angle) +
-        dy * Math.cos(eye.angle);
+        -dx * Math.sin(angle) + dy * Math.cos(angle);
 
-      const distance =
-        Math.hypot(localX, localY) || 1;
-
+      const distance = Math.hypot(localX, localY) || 1;
       const strength = Math.min(distance / 250, 1);
 
       targetX =
@@ -339,21 +350,14 @@
         strength;
     }
 
-    eye.gazeX +=
-      (targetX - eye.gazeX) * followAmount;
-
-    eye.gazeY +=
-      (targetY - eye.gazeY) * followAmount;
+    eye.gazeX += (targetX - eye.gazeX) * followAmount;
+    eye.gazeY += (targetY - eye.gazeY) * followAmount;
 
     const irisRadius = eye.height * 0.31;
 
     const iris = ctx.createRadialGradient(
-      eye.gazeX,
-      eye.gazeY,
-      1,
-      eye.gazeX,
-      eye.gazeY,
-      irisRadius
+      eye.gazeX, eye.gazeY, 1,
+      eye.gazeX, eye.gazeY, irisRadius
     );
 
     iris.addColorStop(0, "#fff1a6");
@@ -362,11 +366,10 @@
     iris.addColorStop(1, "#30280f");
 
     ctx.shadowColor = "#d6b343";
-    ctx.shadowBlur = 6;
+    ctx.shadowBlur = 6 + glare * 4;
     ctx.fillStyle = iris;
 
     ctx.beginPath();
-
     ctx.arc(
       eye.gazeX,
       eye.gazeY,
@@ -374,13 +377,10 @@
       0,
       Math.PI * 2
     );
-
     ctx.fill();
 
-    /* Pupil. */
     ctx.shadowBlur = 0;
     ctx.fillStyle = "#060606";
-
     ctx.beginPath();
 
     ctx.ellipse(
@@ -395,7 +395,6 @@
 
     ctx.fill();
 
-    /* Highlight. */
     ctx.fillStyle = "#fff4c9";
     ctx.beginPath();
 
@@ -410,7 +409,7 @@
     ctx.fill();
     ctx.restore();
 
-    eyeOutline(halfWidth, halfHeight);
+    eyeOutline(halfWidth, halfHeight, glare);
 
     ctx.strokeStyle = "#7b7c7d";
     ctx.lineWidth = 1.1;
@@ -419,45 +418,85 @@
     ctx.restore();
   }
 
-  let lastDraw = 0;
-
   function animate(now) {
     frame = 0;
 
     if (document.hidden) return;
 
-    const elapsed = lastDraw
-      ? Math.min(now - lastDraw, 50)
+    const elapsed = lastTime
+      ? Math.min(now - lastTime, 50)
       : 16.67;
 
-    lastDraw = now;
+    lastTime = now;
 
-    /* Consistent tracking speed across different refresh rates. */
-    const followAmount =
-      1 - Math.pow(0.91, elapsed / 16.67);
+    const contact = contactsOpen();
+
+    /*
+     * 0 = closed, 1 = fully open.
+     * Contacts uses a half-open squint.
+     */
+    const targetOpening = contact ? 0.52 : gallery ? 1 : 0;
+    const targetGlare = contact ? 1 : 0;
+
+    const motionAmount = reducedMotion.matches
+      ? 1
+      : 1 - Math.exp(-elapsed / 240);
+
+    const followAmount = reducedMotion.matches
+      ? 1
+      : 1 - Math.exp(-elapsed / 100);
+
+    opening += (targetOpening - opening) * motionAmount;
+    glare += (targetGlare - glare) * motionAmount;
+
+    if (Math.abs(targetOpening - opening) < 0.001) {
+      opening = targetOpening;
+    }
+
+    if (Math.abs(targetGlare - glare) < 0.001) {
+      glare = targetGlare;
+    }
 
     ctx.clearRect(0, 0, width, height);
 
     for (const eye of eyes) {
-      drawEye(eye, now, followAmount);
+      drawEye(eye, now, followAmount, contact);
     }
 
+    const transitioning =
+      opening !== targetOpening ||
+      glare !== targetGlare;
+
+    const centering = eyes.some(eye =>
+      Math.abs(eye.gazeX) > 0.02 ||
+      Math.abs(eye.gazeY) > 0.02
+    );
+
+    const tracking = gallery && !contact;
+
     if (
-      awake &&
+      eyes.length > 0 &&
       !reducedMotion.matches &&
-      eyes.length > 0
+      (transitioning || tracking || centering)
     ) {
       frame = requestAnimationFrame(animate);
     }
   }
 
+  function wake() {
+    if (frame || document.hidden) return;
+
+    lastTime = 0;
+    frame = requestAnimationFrame(animate);
+  }
+
   function refresh() {
     cancelAnimationFrame(frame);
     frame = 0;
-    lastDraw = 0;
+    lastTime = 0;
 
     buildEyes();
-    animate(performance.now());
+    wake();
   }
 
   function resetPointer() {
@@ -465,28 +504,54 @@
     pointer.y = height / 2;
   }
 
-  window.addEventListener("pointermove", (event) => {
+  window.addEventListener("pointermove", event => {
     if (event.pointerType === "touch") return;
 
     pointer.x = event.clientX;
     pointer.y = event.clientY;
   }, { passive: true });
 
+  window.addEventListener("blur", resetPointer);
+
   document.documentElement.addEventListener(
     "pointerleave",
     resetPointer
   );
 
-  window.addEventListener("blur", resetPointer);
   window.addEventListener("resize", refresh);
-  window.addEventListener("load", refresh);
+
+  /*
+   * The contact script adds/removes messenger-open.
+   * Respond immediately when it changes.
+   */
+  const observer = new MutationObserver(wake);
+
+  observer.observe(document.body, {
+    attributes: true,
+    attributeFilter: ["class"]
+  });
+
+  /*
+   * Handle returning with the browser's Back button,
+   * including pages restored from its memory cache.
+   */
+  window.addEventListener("pageshow", event => {
+    if (event.persisted) {
+      if (!gallery && readPreviousPage() === "gallery") {
+        opening = 1;
+      }
+
+      rememberPage();
+      refresh();
+    }
+  });
 
   document.addEventListener("visibilitychange", () => {
     if (document.hidden) {
       cancelAnimationFrame(frame);
       frame = 0;
     } else {
-      refresh();
+      wake();
     }
   });
 
